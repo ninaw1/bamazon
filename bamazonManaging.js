@@ -167,8 +167,7 @@ function addInventory() {
 
 // createNewProduct will guide the user in adding a new product to the inventory
 function createNewProduct() {
-	// console.log('___ENTER createNewProduct___');
-
+    
 	// Prompt the user to enter information about the new product
 	inquirer.prompt([
 		{
@@ -194,7 +193,6 @@ function createNewProduct() {
 			validate: validateInteger
 		}
 	]).then(function(input) {
-		// console.log('input: ' + JSON.stringify(input));
 
 		console.log('Adding New Item: \n    product_name = ' + input.product_name + '\n' +  
 									   '    department_name = ' + input.department_name + '\n' +  
@@ -219,7 +217,6 @@ function createNewProduct() {
 
 // runBamazon will execute the main application logic
 function runBamazon() {
-	// console.log('___ENTER runBamazon___');
 
 	// Prompt manager for input
 	promptManagerAction();

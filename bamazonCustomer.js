@@ -1,26 +1,15 @@
 // required connections needed for bamazon to work
-var inquirer = require('inquirer');
-var mysql2 = require('mysql2');
+const inquirer = require('inquirer')
+const { createConnection } = require('mysql2')
 
 // creating our connection to our database
-var connection = mysql2.createConnection({
+const db = createConnection({
     host: 'localhost',
     user: 'root', 
     password: 'lhncpjma9101',
     database: 'bamazon'
 })
 
-// to validate that input of supplies are all positive 
-// function validateInput(value) {
-//     var integer = Number.isInteger(parseFloat(value))
-//     var sign = Math.sign(value)
-
-//     if (integer && (sign === 1)) {
-//         return true
-//     } else {
-//         return 'Please enter a positive number!'
-//     }
-// }
 // prompt user to enter id of the product user would like to buy
 function promptUser() {
     console.log('enter id of item user would like to purchase')
@@ -38,14 +27,13 @@ function promptUser() {
         }
     ])
     .then(function(input) {
-        console.log('Customer has selected: \n    item_id = '  + input.item_id + '\n    quantity = ' + input.quantity)
-
+        
         var item = input.item_id
         var quantity = input.quantity
 
         // query databse and confirm the ID exists in the desired quantity 
-        var queryStr = "SELECT * FROM products WHERE ?"
-        connection.query(queryStr, {item_id: item}, function(e, data) {
+        var queryStr = 'SELECT * FROM products WHERE ?'
+        db.query(queryStr, {item_id: item}, function(e, data) {
             if (e) throw e 
             // if user inputs an invalid item ID, the data arry will not produce anything 
             console.log('data = ' + JSON.stringify(data))
@@ -64,11 +52,11 @@ function promptUser() {
                     console.log('Congratulations, the product you have requested is currently in stock. \n Your order has been placed')
 
                     // update item quantity in the database 
-                    var updateQueryStr = "UPDATE products SET stock_quantity =" + (productData.stock_quantity - quantity) + 'WHERE item_id =' + item
+                    var updateQueryStr = 'UPDATE products SET stock_quantity =' + (productData.stock_quantity - quantity) + 'WHERE item_id =' + item
                     console.log(`updatedQueryStr =${updateQueryStr}` )
 
                     // updating inventory: 
-                    connection.query(updateQueryStr, function(e, data) {
+                    db.query(updateQueryStr, function(e, data) {
                         if (e) throw e 
                         console.log('Your total is $' + productData.price * quantity)
                         console.log('Your order has been placed! Thank you for shopping with us!')
@@ -93,7 +81,7 @@ function displayInventory() {
     // db query string 
     queryStr = 'SELECT * FROM products'
     // create db query 
-    connection.query(queryStr, function(e, data) {
+    db.query(queryStr, function(e, data) {
         if (e) throw e 
         console.log('Existing Inventory: ')
         console.log('-----------------------------------------')
@@ -115,7 +103,6 @@ function displayInventory() {
         // how many would the user like to purchase 
         promptUser()
     })
-    // connection.end()
 }
 
 // running the logic of our application 
